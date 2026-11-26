@@ -1,4 +1,6 @@
-.section { background: var(--surface); }
+.section {
+  background: var(--surface);
+}
 
 .header {
   text-align: center;
@@ -28,6 +30,7 @@
   transition: all var(--transition);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .card::after {
@@ -42,13 +45,17 @@
   transition: transform var(--transition);
 }
 
-.card:hover {
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+.card:hover,
+.cardActive {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
   border-color: var(--pillar-color, var(--blue));
   transform: translateY(-4px);
 }
 
-.card:hover::after { transform: scaleX(1); }
+.card:hover::after,
+.cardActive::after {
+  transform: scaleX(1);
+}
 
 .cardTop {
   display: flex;
@@ -66,7 +73,9 @@
   justify-content: center;
 }
 
-.icon { font-size: 2rem; }
+.icon {
+  font-size: 2rem;
+}
 
 .cardTitle {
   font-size: var(--text-xl);
@@ -100,4 +109,174 @@
   font-weight: 500;
 }
 
-.featureItem svg { color: var(--pillar-color, var(--green)); flex-shrink: 0; }
+.featureItem svg {
+  color: var(--pillar-color, var(--green));
+  flex-shrink: 0;
+}
+
+.cardFooter {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.previewHint {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.previewHintActive {
+  color: var(--pillar-color, var(--blue));
+}
+
+.exploreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--pillar-color, var(--blue));
+  text-decoration: none;
+}
+
+/* Interactive Solution Preview Stage */
+.previewStage {
+  margin-top: var(--space-12);
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+}
+
+.previewHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.previewBreadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+}
+
+.previewSchool {
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.previewDivider {
+  color: var(--muted-light);
+}
+
+.previewContext {
+  color: var(--muted);
+}
+
+.tabGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tabBtn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  font-family: var(--font-display);
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tabBtn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text);
+}
+
+.tabBtnActive {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+.previewGrid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.previewGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.previewGrid4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.previewPanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.metricValue {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.liveBadge {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: #059669;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 960px) {
+  .previewGrid4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .previewGrid3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .previewStage {
+    padding: var(--space-4);
+  }
+
+  .previewGrid2,
+  .previewGrid4 {
+    grid-template-columns: 1fr;
+  }
+}
