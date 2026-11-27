@@ -57,6 +57,8 @@ const PROBLEMS: ProblemItem[] = [
 ];
 
 function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; active: boolean }) {
+  const animState = active ? 'running' : 'paused';
+
   if (problemKey === 'manual') {
     return (
       <div
@@ -84,17 +86,19 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
               }}
             >
               {[0, 1, 2, 3, 4].map((col) => {
-                const isPulse = row === 1 && (col === 0 || col === 1 || col === 2);
+                const isActiveCell = row === 1 && col < 3;
                 return (
                   <div
                     key={col}
                     style={{
                       height: '6px',
                       borderRadius: '2px',
-                      background: isPulse && active ? '#EF4444' : '#CBD5E1',
-                      opacity: isPulse ? 1 : 0.6,
-                      transform: isPulse && active ? 'scaleY(1.15)' : 'scale(1)',
-                      transition: 'all 350ms ease',
+                      background: isActiveCell ? '#EF4444' : '#CBD5E1',
+                      opacity: isActiveCell ? 1 : 0.6,
+                      animation: isActiveCell
+                        ? `sheetEntryPulse 1.6s ease-in-out ${col * 160}ms infinite`
+                        : 'none',
+                      animationPlayState: animState,
                     }}
                   />
                 );
@@ -102,7 +106,17 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             </div>
           ))}
         </div>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, opacity: active ? 1 : 0.7, transform: active ? 'translateY(-2px)' : 'none', transition: 'all 300ms ease' }}>
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          style={{
+            flexShrink: 0,
+            animation: 'cursorNudge 2s ease-in-out infinite',
+            animationPlayState: animState,
+          }}
+        >
           <rect x="3" y="3" width="18" height="18" rx="2" stroke="#475569" strokeWidth="2" />
           <path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke="#475569" strokeWidth="1.5" />
           <path d="M14 14l3 3m0 0l-1.5 3.5M17 17l3.5-1.5" stroke="#10B981" strokeWidth="2" strokeLinecap="round" />
@@ -139,13 +153,13 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             display: 'inline-flex',
             alignItems: 'center',
             gap: '4px',
-            transform: active ? 'translateY(-2px)' : 'none',
-            transition: 'transform 300ms ease',
+            animation: 'channelDriftA 2.2s ease-in-out infinite',
+            animationPlayState: animState,
           }}
         >
           💬 Chat
         </span>
-        <span style={{ color: '#94A3B8', fontSize: '0.8rem', borderBottom: '1px dashed #94A3B8', width: '12px', height: '1px' }} />
+        <span style={{ width: '12px', height: '1px', borderBottom: '1px dashed #94A3B8' }} />
         <span
           style={{
             padding: '4px 10px',
@@ -157,13 +171,13 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             display: 'inline-flex',
             alignItems: 'center',
             gap: '4px',
-            transform: active ? 'translateY(2px)' : 'none',
-            transition: 'transform 400ms ease',
+            animation: 'channelDriftB 2.4s ease-in-out infinite',
+            animationPlayState: animState,
           }}
         >
           📞 Call
         </span>
-        <span style={{ color: '#94A3B8', fontSize: '0.8rem' }}>✕</span>
+        <span style={{ color: '#94A3B8', fontSize: '0.8rem', fontWeight: 700 }}>✕</span>
         <span
           style={{
             padding: '4px 10px',
@@ -175,8 +189,8 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             display: 'inline-flex',
             alignItems: 'center',
             gap: '4px',
-            transform: active ? 'translateX(3px)' : 'none',
-            transition: 'transform 500ms ease',
+            animation: 'channelDriftA 2.6s ease-in-out 0.3s infinite',
+            animationPlayState: animState,
           }}
         >
           📋 Board
@@ -211,8 +225,8 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             color: '#FFFFFF',
             flex: 1,
             textAlign: 'center',
-            transform: active ? 'translateX(-3px)' : 'none',
-            transition: 'transform 350ms ease',
+            animation: 'siloPullLeft 2.1s ease-in-out infinite',
+            animationPlayState: animState,
           }}
         >
           Student Data
@@ -230,8 +244,8 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             fontSize: '0.65rem',
             fontWeight: 800,
             flexShrink: 0,
-            transform: active ? 'rotate(180deg)' : 'none',
-            transition: 'transform 400ms ease',
+            animation: 'gapPulse 2.1s ease-in-out infinite',
+            animationPlayState: animState,
           }}
         >
           ✕
@@ -246,8 +260,8 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
             color: '#FFFFFF',
             flex: 1,
             textAlign: 'center',
-            transform: active ? 'translateX(3px)' : 'none',
-            transition: 'transform 350ms ease',
+            animation: 'siloPullRight 2.1s ease-in-out infinite',
+            animationPlayState: animState,
           }}
         >
           Parent Feed
@@ -280,15 +294,17 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
           flex: 1,
         }}
       >
-        {[20, 35, 75, 15, 45, 10, 50].map((h, i) => (
+        {[25, 45, 80, 20, 55, 15, 65].map((h, i) => (
           <div
             key={i}
             style={{
               flex: 1,
-              height: active ? `${h}%` : '20%',
+              height: `${h}%`,
               borderRadius: '2px 2px 0 0',
               background: i === 2 || i === 4 || i === 6 ? '#EC4899' : '#94A3B8',
-              transition: `height ${300 + i * 100}ms ease`,
+              transformOrigin: 'bottom',
+              animation: `barSweep 1.8s ease-in-out ${i * 110}ms infinite alternate`,
+              animationPlayState: animState,
             }}
           />
         ))}
@@ -302,18 +318,13 @@ function ProblemIllustration({ problemKey, active }: { problemKey: ProblemKey; a
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          animation: active ? 'spin 3s linear infinite' : 'none',
+          animation: 'snapshotSpin 3.2s linear infinite',
+          animationPlayState: animState,
           flexShrink: 0,
         }}
       >
         <div style={{ width: '4px', height: '4px', background: '#94A3B8', borderRadius: '50%' }} />
       </div>
-      <style jsx>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -361,10 +372,20 @@ export default function ProblemsSection() {
         <AnimateOnScroll>
           <div className={styles.header} style={{ marginBottom: '3rem' }}>
             <div className="badge badge--indigo">The Problem</div>
-            <h2 className={`heading-lg ${styles.headline}`} style={{ color: '#1E293B', fontFamily: 'var(--font-display)', fontWeight: 800 }}>
+            <h2
+              className={`heading-lg ${styles.headline}`}
+              style={{ color: '#1E293B', fontFamily: 'var(--font-display)', fontWeight: 800 }}
+            >
               Schools don&apos;t need more software complexity.
               <br />
-              <span className="gradient-text" style={{ background: 'linear-gradient(to right, #3B82F6, #8B5CF6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <span
+                className="gradient-text"
+                style={{
+                  background: 'linear-gradient(to right, #3B82F6, #8B5CF6)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 They need better-connected operations.
               </span>
             </h2>
@@ -407,7 +428,18 @@ export default function ProblemsSection() {
                 }
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                  <div className={styles.iconWrap} style={{ width: '42px', height: '42px', borderRadius: '10px', background: `${p.color}10`, display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+                  <div
+                    className={styles.iconWrap}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '10px',
+                      background: `${p.color}14`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <span className={styles.icon}>{p.icon}</span>
                   </div>
                   <span
@@ -426,17 +458,43 @@ export default function ProblemsSection() {
                 </div>
 
                 <div>
-                  <h3 className={styles.cardTitle} style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', fontFamily: 'var(--font-display)', marginBottom: '0.4rem' }}>
+                  <h3
+                    className={styles.cardTitle}
+                    style={{
+                      fontSize: '1.15rem',
+                      fontWeight: 800,
+                      color: '#0F172A',
+                      fontFamily: 'var(--font-display)',
+                      marginBottom: '0.4rem',
+                    }}
+                  >
                     {p.title}
                   </h3>
-                  <p className={styles.cardDesc} style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.5, marginBottom: '0.5rem' }}>
+                  <p
+                    className={styles.cardDesc}
+                    style={{
+                      fontSize: '0.85rem',
+                      color: '#475569',
+                      lineHeight: 1.5,
+                      marginBottom: '0.5rem',
+                    }}
+                  >
                     {p.desc}
                   </p>
                 </div>
 
                 <ProblemIllustration problemKey={p.key} active={highlighted} />
 
-                <div style={{ fontSize: '0.78rem', fontWeight: 600, color: '#64748B', marginTop: 'auto', borderTop: '1px solid #F1F5F9', paddingTop: '0.75rem' }}>
+                <div
+                  style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    color: '#64748B',
+                    marginTop: 'auto',
+                    borderTop: '1px solid #F1F5F9',
+                    paddingTop: '0.75rem',
+                  }}
+                >
                   {p.metric}
                 </div>
               </div>
@@ -444,6 +502,88 @@ export default function ProblemsSection() {
           })}
         </div>
       </div>
-    </div>
+
+      <style jsx>{`
+        @keyframes sheetEntryPulse {
+          0%, 100% {
+            transform: scaleY(1);
+            opacity: 0.75;
+          }
+          50% {
+            transform: scaleY(1.35);
+            opacity: 1;
+          }
+        }
+        @keyframes cursorNudge {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(-3px, -2px);
+          }
+        }
+        @keyframes channelDriftA {
+          0%, 100% {
+            transform: translateY(-2px);
+          }
+          50% {
+            transform: translateY(2px);
+          }
+        }
+        @keyframes channelDriftB {
+          0%, 100% {
+            transform: translateY(2px);
+          }
+          50% {
+            transform: translateY(-2px);
+          }
+        }
+        @keyframes siloPullLeft {
+          0%, 100% {
+            transform: translateX(0);
+          }
+          50% {
+            transform: translateX(-3px);
+          }
+        }
+        @keyframes siloPullRight {
+          0%, 100% {
+            transform: translateX(0);
+          }
+          50% {
+            transform: translateX(3px);
+          }
+        }
+        @keyframes gapPulse {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.12);
+          }
+        }
+        @keyframes barSweep {
+          0% {
+            transform: scaleY(0.55);
+          }
+          100% {
+            transform: scaleY(1);
+          }
+        }
+        @keyframes snapshotSpin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation: none !important;
+          }
+        }
+      `}</style>
+    </section>
   );
 }
